@@ -26,6 +26,7 @@ Web3 *web3 = nullptr;
 string active_url;
 
 void downloadAndSaveFile(const char* url) {
+  Serial.println("downloading...");
   HTTPClient http;
   http.begin(url);
 
@@ -95,15 +96,14 @@ void setup() {
 
   web3 = new Web3(GOERLI_ID);
 
-  active_url = queryUrl();
-
   if (!SPIFFS.begin(true)) {
     Serial.println("An error occurred while mounting SPIFFS");
     return;
   }
 
-  // delay(1000);
-  // downloadAndSaveFile("https://raw.githubusercontent.com/lorbke/BlockBoard/main/assets/default_hardware.gif");  
+  active_url = queryUrl();
+  downloadAndSaveFile(active_url.c_str());
+
 }
 
 
