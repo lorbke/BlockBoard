@@ -1,73 +1,37 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# BlockBoard
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+_Revolutionizing Communication: Rent Message Boards on the Blockchain_
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<div align="center">
+  <img src="https://github.com/lorbke/BlockBoard/blob/assets/assets/BlockBoard_origin_3.png">
+</div>
+<br />
+<br />
 
-## Description
+## The Problem
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Traditional methods of **communication and advertisement** – billboards, newspapers, TV – are limited by geography, high costs, and opacity. For advertisers, it's hard to measure genuine reach. For the public, content is often out of their control. Smaller voices struggle to be heard amidst monopolistic giants.
+<br />
+<br />
 
-## Installation
+## Our Solution
 
-```bash
-$ npm install
-```
+**BlockBoard** aims to revolutionize communication and advertisement by leveraging Blockchain technology. It offers a decentralized platform where users can **rent physical message boards**. They can **manage the time and location** of their messages by interacting with Smart contracts.
+<br />
 
-## Running the app
+### Key Features
+1. **Decentralized Management**: With BlockBoard, no central entity controls the message boards. Anyone can rent space on a board by engaging with the associated smart contract.
+2. **Proof of Display**: Using IoT devices and blockchain, BlockBoard provides verifiable proof that an advertisement or message was displayed on a board for a given duration, helping advertisers measure genuine reach.
+3. **Dynamic Pricing**: Pricing is based on demand and location. The transparent pricing mechanism ensures fair pricing for all.
+4. **Accessible to All**: Anyone, regardless of their resources, can rent a message board for their personal, commercial, or social messages. 
+5. **Environmental Concerns**: BlockBoard promotes the use of electronic message boards, which reduce the need for paper-based advertisement, supporting a more eco-friendly approach.
+6. **Secure Payment System**: Payments are made via ETH or any ERC-20 token. Smart contracts handle the funds, releasing them to the board owner only when proof of display is verified.
+8. **Scalability**: BlockBoard has the potential to integrate with other blockchain projects, opening doors for collaborations with augmented reality platforms, geolocation-based services, and more.
+<br />
 
-```bash
-# development
-$ npm run start
+### The Product
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+<div style="display: flex; justify-content: center;">
+    <img src="https://github.com/lorbke/BlockBoard/blob/assets/assets/BlockBoard_app_3.png" alt="BlockBoard App" style="margin-right: 20;">
+    <img src="https://github.com/lorbke/BlockBoard/blob/assets/assets/BlockBoard_box.png" alt="BlockBoard Box" >
+</div>
