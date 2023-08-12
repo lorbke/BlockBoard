@@ -75,7 +75,7 @@ contract BlockBoard {
 		return accumulating_per_block;
 	}
 
-	function _settleRentForBillboard(address billboard_addr) private {
+	function settleRentForBillboard(address billboard_addr) private {
 		uint256 accumulated = getRentForBillboard(billboard_addr);
 		address renter = billboards_map[billboard_addr].renter;
 
@@ -90,11 +90,11 @@ contract BlockBoard {
 		billboards_map[billboard_addr].renter = address(0);
 	}
 
-	function _settleAllRentForRenter(address renter_addr) private {
+	function settleAllRentForRenter(address renter_addr) private {
 		for (uint256 i = 0; i < billboard_owners_list.length; i++) {
 			Billboard memory curr = billboards_map[billboard_owners_list[i]];
 			if (curr.renter == renter_addr)
-				_settleRentForBillboard(curr.owner);
+				settleRentForBillboard(curr.owner);
 		}
 	}
 
@@ -110,7 +110,7 @@ contract BlockBoard {
 		renter_stakes[renter_addr] -= bounty;
 		payable(msg.sender).transfer(bounty);
 
-		_settleAllRentForRenter(renter_addr);
+		settleAllRentForRenter(renter_addr);
 	}
 
 	function rentBillboard(string memory ad_url, address billboard_addr, uint256 cost_per_block) public payable {
@@ -118,7 +118,7 @@ contract BlockBoard {
 		require (billboards_map[billboard_addr].cost_per_block <= cost_per_block, "New cost per block has to be higher than previous cost per block");
 		require (msg.value >= cost_per_block, "Not enough stake provided");
 
-		_settleRentForBillboard(billboard_addr);
+		settleRentForBillboard(billboard_addr);
 
 		renter_stakes[msg.sender] = msg.value;
 		billboards_map[billboard_addr].renter = msg.sender;
@@ -130,7 +130,7 @@ contract BlockBoard {
 	function unstakeRent() public {
 		require (renter_stakes[msg.sender] > 0, "Renter has no stake");
 
-		_settleAllRentForRenter(msg.sender);
+		settleAllRentForRenter(msg.sender);
 		payable(msg.sender).transfer(renter_stakes[msg.sender]);
 		renter_stakes[msg.sender] = 0;
 	}
