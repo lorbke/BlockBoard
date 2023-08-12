@@ -112,13 +112,14 @@ File root, gifFile;
 
 void loop() 
 {
+  display::dispay_gif("/gifs/eth.gif");
+  delay(3000);
   display::drawText("checking for new image");
   string url = queryUrl();
   if (url != active_url) {
     display::drawText("downloading new image");
     active_url = url;
     downloadAndSaveFile(url.c_str());
-    display::dispay_gif("/ad.gif");
   }
   display::dispay_gif("/ad.gif");
   delay(20000);
