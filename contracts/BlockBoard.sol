@@ -63,6 +63,7 @@ contract BlockBoard {
 		return (block.number - block_of_rent) * cost_per_block;
 	}
 
+	// get outstanding payment of renter for all billboards
 	function getRenterAccumulatedTotal(address renter_addr) public view returns (uint256 accumulated) {
 		accumulated = 0;
 		for (uint256 i = 0; i < billboard_token_list.length; i++) {
@@ -73,6 +74,7 @@ contract BlockBoard {
 		return accumulated;
 	}
 
+	// get outstanding payment of renter per block for all billboards
 	function getRenterAccumulatingPerBlock(address renter_addr) public view returns (uint256 accumulating_per_block) {
 		accumulating_per_block = 0;
 		for (uint256 i = 0; i < billboard_token_list.length; i++) {
@@ -83,6 +85,7 @@ contract BlockBoard {
 		return accumulating_per_block;
 	}
 
+	// settles the rent for a single billboard
 	function settleRentForBillboard(uint256 billboard_token_id) private {
 		uint256 accumulated = getRentForBillboard(billboard_token_id);
 		address renter = billboards_map[billboard_token_id].renter;
@@ -110,12 +113,13 @@ contract BlockBoard {
 	/* 	MAIN FUNCTIONS                                                                    */
 	/*------------------------------------------------------------------------------------*/
 
-	function getAd(address billboard_addr) public pure returns (string memory ad_url) {
-		// return billboards_map[billboard_addr].ad_url;
-		billboard_addr = address(0);
-		return "https://raw.githubusercontent.com/lorbke/BlockBoard/main/assets/default_hardware.gif";
+	// get current ad url of billboard
+	function getAd(uint256 billboard_id) public view returns (string memory ad_url) {
+		return billboards_map[billboard_id].ad_url;
 	}
 
+	// register a new billboard
+	// @todo fix parameter names
 	function registerBillboard(uint256 geo_lat, uint256 geo_y) public {
 		GeoPoint memory location = GeoPoint(geo_lat, geo_y);
 		uint256 token_id = nft_contract.mint(msg.sender);
@@ -124,6 +128,7 @@ contract BlockBoard {
 		billboards_map[token_id] = billboard;
 	}
 
+	// rent a billboard
 	function rentBillboard(string memory ad_url, uint256 billboard_token_id, uint256 cost_per_block) public payable {
 		require (billboards_map[billboard_token_id].exists == true, "Billboard does not exist");
 		require (billboards_map[billboard_token_id].cost_per_block <= cost_per_block, "New cost per block has to be higher than previous cost per block");

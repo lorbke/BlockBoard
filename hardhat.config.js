@@ -10,7 +10,12 @@ module.exports = {
       hardhat: {},
       goerli: {
          url: API_URL,
-         accounts: [`0x${PRIVATE_KEY}`]
-    }
-  },
+         accounts: [`0x${PRIVATE_KEY}`],
+         gasPrice: 800000000
+      },
+      zkevm: {
+         url: `https://rpc.public.zkevm-test.net`,
+         accounts: [`0x${PRIVATE_KEY}`],
+      },
+   },
 };

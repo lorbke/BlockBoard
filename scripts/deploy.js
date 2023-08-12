@@ -7,9 +7,10 @@ async function deployBlockBoardNFT() {
     return blockBoardNFT;
 }
 
-async function deployBlockBoard() {
+// contract address as parameter
+async function deployBlockBoard(blockBoardNFTAddress) {
 	const BlockBoard = await hre.ethers.getContractFactory("BlockBoard");
-	const blockBoard = await BlockBoard.deploy();
+	const blockBoard = await BlockBoard.deploy(blockBoardNFTAddress);
 	await blockBoard.deployed();
 	return blockBoard;
 }
@@ -22,7 +23,7 @@ async function main() {
 
     const blockBoardNFT = await deployBlockBoardNFT();
 	console.log("BlockBoardNFT deployed to:", blockBoardNFT.address);
-	const blockBoard = await deployBlockBoard();
+	const blockBoard = await deployBlockBoard(blockBoardNFT.address);
 	console.log("BlockBoard deployed to:", blockBoard.address);
 }
 

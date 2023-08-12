@@ -73,6 +73,11 @@ it("should allow renting a billboard", async function () {
 	expect(rent).to.be.gt(0);
   });
 
+  it("should return a url", async function () {
+	const url = await blockBoard.getAd(1);
+	expect(url).to.equal("https://example.com");
+  });
+
   // @todo add getters
 
   // Additional tests can be added to cover more scenarios
