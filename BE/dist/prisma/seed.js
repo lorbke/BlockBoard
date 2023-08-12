@@ -11,7 +11,7 @@ async function main() {
             username: 'Google',
             privateKey: 'imasuperprivatekey',
             publicKey: 'iampublic',
-            password: 'bruhhh',
+            password: '$2b$10$0HidpQKTnqvcpcxjJ.uA7uG6soSa9C8z2x75.fT5W8./qVkNkLKxW',
             ownedBB: {
                 create: [
                     {

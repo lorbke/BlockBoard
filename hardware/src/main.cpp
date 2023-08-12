@@ -1,315 +1,125 @@
-// Example sketch which shows how to display a 64x32 animated GIF image stored in FLASH memory
-// on a 64x32 LED matrix
-//
-// Credits: https://github.com/bitbank2/AnimatedGIF/tree/master/examples/ESP32_LEDMatrix_I2S
-// 
-
-/* INSTRUCTIONS
- *
- * 1. First Run the 'ESP32 Sketch Data Upload Tool' in Arduino from the 'Tools' Menu.
- *    - If you don't know what this is or see it as an option, then read this:
- *      https://github.com/me-no-dev/arduino-esp32fs-plugin 
- *    - This tool will upload the contents of the data/ directory in the sketch folder onto
- *      the ESP32 itself.
- *
- * 2. You can drop any animated GIF you want in there, but keep it to the resolution of the 
- *    MATRIX you're displaying to. To resize a gif, use this online website: https://ezgif.com/
- *
- * 3. Have fun.
- */
-
-#define FILESYSTEM SPIFFS
 #include <SPIFFS.h>
-#include <AnimatedGIF.h>
-#include <ESP32-HUB75-MatrixPanel-I2S-DMA.h>
 #include <WiFi.h>
+#include <HTTPClient.h>
+#include <Web3.h>
+// #include <Contract.h>
 
-// ----------------------------
-
-/* 
- * Below is an is the 'legacy' way of initialising the MatrixPanel_I2S_DMA class.
- * i.e. MATRIX_WIDTH and MATRIX_HEIGHT are modified by compile-time directives.
- * By default the library assumes a single 64x32 pixel panel is connected.
- *
- * Refer to the example '2_PatternPlasma' on the new / correct way to setup this library
- * for different resolutions / panel chain lengths within the sketch 'setup()'.
- * 
- */
+#include "display.h"
 
 #define PANEL_RES_X 64      // Number of pixels wide of each INDIVIDUAL panel module. 
 #define PANEL_RES_Y 64     // Number of pixels tall of each INDIVIDUAL panel module.
 #define PANEL_CHAIN 2      // Total number of panels chained one to another
 
-const char* ssid = "mwn-events";
-const char* password = "yourNetworkPassword";
+const char* ssid = "0xCola";
+const char* password = "0xColaqq";
 
-//MatrixPanel_I2S_DMA dma_display;
-MatrixPanel_I2S_DMA *dma_display = nullptr;
+#define MY_ADDR "0x18EeDAb07377871eFe7f2B31bFd86EebB8F5DeFF"
+#define CONTRACT  "0x0C8d83bAab5Ad0b9bAe3832697f3a9380e086D3e"
 
-uint16_t myBLACK = dma_display->color565(0, 0, 0);
-uint16_t myWHITE = dma_display->color565(255, 255, 255);
-uint16_t myRED = dma_display->color565(255, 0, 0);
-uint16_t myGREEN = dma_display->color565(0, 255, 0);
-uint16_t myBLUE = dma_display->color565(0, 0, 255);
-
-
-AnimatedGIF gif;
-File f;
-int x_offset, y_offset;
+#define NATIVE_ETH_TOKENS "ETH"                                //if you switch chains you might want to change this
+#define CHILLIFROGS "0xa3b7cee4e082183e69a03fc03476f28b12c545a7"
+#define ERC20CONTRACT  "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"  //a well known ERC20 token contract on mainnet
+#define VITALIKADDRESS "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"
 
 
+Web3 *web3 = nullptr;
+string active_url;
 
-// Draw a line of image directly on the LED Matrix
-void GIFDraw(GIFDRAW *pDraw)
-{
-    uint8_t *s;
-    uint16_t *d, *usPalette, usTemp[320];
-    int x, y, iWidth;
+void downloadAndSaveFile(const char* url) {
+  Serial.println("downloading...");
+  HTTPClient http;
+  http.begin(url);
 
-  iWidth = pDraw->iWidth;
-  if (iWidth > MATRIX_WIDTH)
-      iWidth = MATRIX_WIDTH;
+  int httpCode = http.GET();
 
-    usPalette = pDraw->pPalette;
-    y = pDraw->iY + pDraw->y; // current line
-    
-    s = pDraw->pPixels;
-    if (pDraw->ucDisposalMethod == 2) // restore to background color
-    {
-      for (x=0; x<iWidth; x++)
-      {
-        if (s[x] == pDraw->ucTransparent)
-           s[x] = pDraw->ucBackground;
-      }
-      pDraw->ucHasTransparency = 0;
+  if (httpCode == HTTP_CODE_OK) {
+    File file = SPIFFS.open("/ad.gif", FILE_WRITE);
+    if (!file) {
+      display::drawText("shit download failed");
+      delay(1000);
+      Serial.println("Error opening file for writing");
+      return;
     }
-    // Apply the new pixels to the main image
-    if (pDraw->ucHasTransparency) // if transparency used
-    {
-      uint8_t *pEnd, c, ucTransparent = pDraw->ucTransparent;
-      int x, iCount;
-      pEnd = s + pDraw->iWidth;
-      x = 0;
-      iCount = 0; // count non-transparent pixels
-      while(x < pDraw->iWidth)
-      {
-        c = ucTransparent-1;
-        d = usTemp;
-        while (c != ucTransparent && s < pEnd)
-        {
-          c = *s++;
-          if (c == ucTransparent) // done, stop
-          {
-            s--; // back up to treat it like transparent
-          }
-          else // opaque
-          {
-             *d++ = usPalette[c];
-             iCount++;
-          }
-        } // while looking for opaque pixels
-        if (iCount) // any opaque pixels?
-        {
-          for(int xOffset = 0; xOffset < iCount; xOffset++ ){
-            dma_display->drawPixel(x + xOffset, y, usTemp[xOffset]); // 565 Color Format
-          }
-          x += iCount;
-          iCount = 0;
-        }
-        // no, look for a run of transparent pixels
-        c = ucTransparent;
-        while (c == ucTransparent && s < pEnd)
-        {
-          c = *s++;
-          if (c == ucTransparent)
-             iCount++;
-          else
-             s--; 
-        }
-        if (iCount)
-        {
-          x += iCount; // skip these
-          iCount = 0;
-        }
-      }
-    }
-    else // does not have transparency
-    {
-      s = pDraw->pPixels;
-      // Translate the 8-bit pixels through the RGB565 palette (already byte reversed)
-      for (x=0; x<pDraw->iWidth; x++)
-      {
-        dma_display->drawPixel(x, y, usPalette[*s++]); // color 565
-      }
-    }
-} /* GIFDraw() */
 
+    String payload = http.getString();
+    file.print(payload);
 
-void * GIFOpenFile(const char *fname, int32_t *pSize)
-{
-  Serial.print("Playing gif: ");
-  Serial.println(fname);
-  f = FILESYSTEM.open(fname);
-  if (f)
-  {
-    *pSize = f.size();
-    return (void *)&f;
-  }
-  return NULL;
-} /* GIFOpenFile() */
-
-void GIFCloseFile(void *pHandle)
-{
-  File *f = static_cast<File *>(pHandle);
-  if (f != NULL)
-     f->close();
-} /* GIFCloseFile() */
-
-int32_t GIFReadFile(GIFFILE *pFile, uint8_t *pBuf, int32_t iLen)
-{
-    int32_t iBytesRead;
-    iBytesRead = iLen;
-    File *f = static_cast<File *>(pFile->fHandle);
-    // Note: If you read a file all the way to the last byte, seek() stops working
-    if ((pFile->iSize - pFile->iPos) < iLen)
-       iBytesRead = pFile->iSize - pFile->iPos - 1; // <-- ugly work-around
-    if (iBytesRead <= 0)
-       return 0;
-    iBytesRead = (int32_t)f->read(pBuf, iBytesRead);
-    pFile->iPos = f->position();
-    return iBytesRead;
-} /* GIFReadFile() */
-
-int32_t GIFSeekFile(GIFFILE *pFile, int32_t iPosition)
-{ 
-  int i = micros();
-  File *f = static_cast<File *>(pFile->fHandle);
-  f->seek(iPosition);
-  pFile->iPos = (int32_t)f->position();
-  i = micros() - i;
-//  Serial.printf("Seek time = %d us\n", i);
-  return pFile->iPos;
-} /* GIFSeekFile() */
-
-unsigned long start_tick = 0;
-
-void ShowGIF(char *name)
-{
-  start_tick = millis();
-   
-  if (gif.open(name, GIFOpenFile, GIFCloseFile, GIFReadFile, GIFSeekFile, GIFDraw))
-  {
-    x_offset = (MATRIX_WIDTH - gif.getCanvasWidth())/2;
-    if (x_offset < 0) x_offset = 0;
-    y_offset = (MATRIX_HEIGHT - gif.getCanvasHeight())/2;
-    if (y_offset < 0) y_offset = 0;
-    Serial.printf("Successfully opened GIF; Canvas size = %d x %d\n", gif.getCanvasWidth(), gif.getCanvasHeight());
-    Serial.flush();
-    while (gif.playFrame(true, NULL))
-    {      
-    //   if ( (millis() - start_tick) > 8000) { // we'll get bored after about 8 seconds of the same looping gif
-    //     break;
-    //   }
-    }
-    gif.close();
+    file.close();
+    Serial.println("File downloaded and saved to SPIFFS");
+  } else {
+    display::drawText("shit http failed");
+    delay(1000);
+    Serial.printf("HTTP request failed with error %s\n", http.errorToString(httpCode).c_str());
   }
 
-} /* ShowGIF() */
+  http.end();
+}
 
+string queryUrl()
+{
+    string contractAddrStr = CONTRACT;
+    string address = MY_ADDR;
 
+    Contract contract(web3, CONTRACT);
 
-/************************* Arduino Sketch Setup and Loop() *******************************/
+    string param = contract.SetupContractData("getAd(address)", &address);
+    string result = contract.ViewCall(&param);
+
+    Serial.println(result.c_str());
+    string link = web3->getString(&result);
+    Serial.println(link.c_str());
+    return link;
+}
+
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   delay(1000);
 
-    WiFi.mode(WIFI_STA); //Optional
-    WiFi.begin(ssid, password);
-    Serial.println("\nConnecting");
+  display::setup();
+  delay(1000);
 
-    while(WiFi.status() != WL_CONNECTED){
-        Serial.print(".");
-        delay(100);
-    }
+  display::drawText("connecting");
 
-    Serial.println("\nConnected to the WiFi network");
-    Serial.print("Local ESP32 IP: ");
-    Serial.println(WiFi.localIP());
+  WiFi.mode(WIFI_STA);
+  WiFi.begin(ssid, password);
+  Serial.println("\nConnecting");
 
-  HUB75_I2S_CFG mxconfig(
-    PANEL_RES_X,   // module width
-    PANEL_RES_Y,   // module height
-    PANEL_CHAIN    // Chain length
-  );
-
-  mxconfig.gpio.b = 22;
-  mxconfig.gpio.e = 32;
-
- // mxconfig.gpio.e = 18;
- // mxconfig.clkphase = false;
-  //mxconfig.driver = HUB75_I2S_CFG::FM6126A;
-
-  // Display Setup
-  dma_display = new MatrixPanel_I2S_DMA(mxconfig);
-  dma_display->begin();
-  dma_display->setBrightness8(10); //0-255
-  dma_display->clearScreen();
-  dma_display->fillScreen(myWHITE);
-
-  Serial.println("Starting AnimatedGIFs Sketch");
-
-  // Start filesystem
-  Serial.println(" * Loading SPIFFS");
-  if(!SPIFFS.begin()){
-        Serial.println("SPIFFS Mount Failed");
+  while(WiFi.status() != WL_CONNECTED){
+      display::drawText("connecting");
+      delay(200);
+      display::drawText("connecting.");
+      delay(200);
   }
-  
-  dma_display->begin();
-  
-  /* all other pixel drawing functions can only be called after .begin() */
-  dma_display->fillScreen(dma_display->color565(0, 0, 0));
-  gif.begin(LITTLE_ENDIAN_PIXELS);
+
+  display::drawText("connected");
+  delay(1000);
+
+  web3 = new Web3(GOERLI_ID);
+
+  if (!SPIFFS.begin(true)) {
+    Serial.println("An error occurred while mounting SPIFFS");
+    return;
+  }
+
+  active_url = queryUrl();
+  downloadAndSaveFile(active_url.c_str());
 
 }
 
-String gifDir = "/gifs"; // play all GIFs in this directory on the SD card
+
 char filePath[256] = { 0 };
 File root, gifFile;
 
 void loop() 
 {
-   while (1) // run forever
-   {
-      
-      root = FILESYSTEM.open(gifDir);
-      if (root)
-      {
-           gifFile = root.openNextFile();
-           memset(filePath, 0x0, sizeof(filePath));  
-           strcpy(filePath, gifFile.path());
-           while (true) {
-            ShowGIF(filePath);
-           }
-            // while (gifFile)
-            // {
-            //   if (!gifFile.isDirectory()) // play it
-            //   {
-                
-            //     // C-strings... urghh...                
-            //     memset(filePath, 0x0, sizeof(filePath));                
-            //     strcpy(filePath, gifFile.path());
-                
-            //     // Show it.
-            //     ShowGIF(filePath);
-               
-            //   }
-            //   gifFile.close();
-            //   gifFile = root.openNextFile();
-            // }
-         root.close();
-      } // root
-      
-      delay(1000); // pause before restarting
-      
-   } // while
+  display::drawText("checking for new image");
+  string url = queryUrl();
+  if (url != active_url) {
+    display::drawText("downloading new image");
+    active_url = url;
+    downloadAndSaveFile(url.c_str());
+    display::dispay_gif("/ad.gif");
+  }
+  display::dispay_gif("/ad.gif");
+  delay(20000);
 }

@@ -6,6 +6,7 @@ export declare class CompanyService {
     private prisma;
     constructor(prisma: PrismaService);
     create(createCompanyDto: CreateCompanyDto): Promise<Company>;
+    createCompany(data: Company): Promise<Company>;
     findAll(): Promise<{
         id: string;
         username: string;

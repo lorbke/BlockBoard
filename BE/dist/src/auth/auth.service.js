@@ -16,6 +16,7 @@ const prisma_service_1 = require("../prisma/prisma.service");
 const company_service_1 = require("../company/company.service");
 const bcrypt = require("bcrypt");
 const company_model_1 = require("../company/company.model");
+const ethers_1 = require("ethers");
 let AuthService = exports.AuthService = class AuthService {
     constructor(prismaService, jwtService, CompanyService) {
         this.prismaService = prismaService;
@@ -39,11 +40,14 @@ let AuthService = exports.AuthService = class AuthService {
         };
     }
     async register(createDto) {
+        const wallet = ethers_1.Wallet.createRandom();
+        const publicKey = wallet.address;
+        const privateKey = wallet.privateKey;
         const createCompany = new company_model_1.Company();
         createCompany.username = createDto.username;
         createCompany.password = await bcrypt.hash(createDto.password, 10);
-        createCompany.privateKey = createDto.privateKey;
-        createCompany.publicKey = createDto.publicKey;
+        createCompany.privateKey = privateKey;
+        createCompany.publicKey = publicKey;
         const user = await this.CompanyService.create(createCompany);
         return {
             token: this.jwtService.sign({ username: user.username }),
