@@ -1,9 +1,6 @@
-//# import IBlockBoardNFT; 
-// Fe currently doesn't support external interface imports
-// IBlockBoardNFT interface should be declared directly in the Fe contract until the language supports imports.
 
 interface IBlockBoardNFT:
-	pub def mint(recipient: address) -> u256:
+	pub fn mint(recipient: address) -> u256:
 
 contract BlockBoard:
 
@@ -33,12 +30,12 @@ contract BlockBoard:
 
 	// Constructor
 	@public
-	def __init__(nft_contract_addr: address):
+	fn __init__(nft_contract_addr: address):
 		self.nft_contract = IBlockBoardNFT(nft_contract_addr)
 
 	// Helper Functions
 	@public @view
-	def getRentForBillboard(billboard_token_id: u256) -> u256:
+	fn getRentForBillboard(billboard_token_id: u256) -> u256:
 		assert self.billboards_map[billboard_token_id].exists == true, "Billboard does not exist"
 		block_of_rent: u256 = self.billboards_map[billboard_token_id].block_of_rent
 		cost_per_block: u256 = self.billboards_map[billboard_token_id].cost_per_block
@@ -46,7 +43,7 @@ contract BlockBoard:
 		return (block.number - block_of_rent) * cost_per_block
 
 	@public @view
-	def getRenterAccumulatedTotal(renter_addr: address) -> u256:
+	fn getRenterAccumulatedTotal(renter_addr: address) -> u256:
 		accumulated: u256 = 0
 		for billboard_token_id in self.billboard_token_list:
 			if self.billboards_map[billboard_token_id].renter == renter_addr:
@@ -57,7 +54,7 @@ contract BlockBoard:
 	// Fe currently doesn't support in-place updates for structs within maps. 
 	// So, we would need to pull out the struct, modify it, and set it again.
 
-	def settleRentForBillboard(billboard_token_id: u256):
+	fn settleRentForBillboard(billboard_token_id: u256):
 		accumulated: u256 = self.getRentForBillboard(billboard_token_id)
 		renter: address = self.billboards_map[billboard_token_id].renter
 		stake_before: u256 = self.renter_stakes[renter]
@@ -79,11 +76,11 @@ contract BlockBoard:
 	// Main Functions
 
 	@public @view
-	def getAd(billboard_addr: address) -> string:
+	fn getAd(billboard_addr: address) -> string:
 		return "https://raw.githubusercontent.com/lorbke/BlockBoard/main/assets/default_hardware.gif"
 
 	@public
-	def registerBillboard(geo_lat: u256, geo_y: u256):
+	fn registerBillboard(geo_lat: u256, geo_y: u256):
 		location: GeoPoint = GeoPoint(geo_lat, geo_y)
 		token_id: u256 = self.nft_contract.mint(msg.sender)
 		billboard: Billboard = Billboard(true, 0, token_id, msg.sender, location, "", ZERO_ADDRESS, 0, 0)
@@ -91,7 +88,7 @@ contract BlockBoard:
 		self.billboards_map[token_id] = billboard
 
 	@public @payable
-	def rentBillboard(ad_url: string, billboard_token_id: u256, cost_per_block: u256):
+	fn rentBillboard(ad_url: string, billboard_token_id: u256, cost_per_block: u256):
 		assert self.billboards_map[billboard_token_id].exists == true, "Billboard does not exist"
 		assert self.billboards_map[billboard_token_id].cost_per_block <= cost_per_block, "New cost per block must be higher than previous cost"
 		assert msg.value >= cost_per_block, "Not enough stake provided"
@@ -106,7 +103,7 @@ contract BlockBoard:
 		self.billboards_map[billboard_token_id] = billboard
 
 	@public
-	def killRenter(renter_addr: address):
+	fn killRenter(renter_addr: address):
 		assert self.renter_stakes[renter_addr] > 0, "Renter has no stake"
 		total_accumulated: u256 = self.getRenterAccumulatedTotal(renter_addr)
 		bounty: u256 = self.renter_stakes[renter_addr] * BOUNTY_PERCENTAGE / 100
@@ -114,11 +111,11 @@ contract BlockBoard:
 		# ... truncated for brevity ...
 
 	@public
-	def unstakeRent():
+	fn unstakeRent():
 		assert self.renter_stakes[msg.sender] > 0, "Renter has no stake"
 
 		    @public
-    def killRenter(renter_addr: address):
+    fn killRenter(renter_addr: address):
         assert self.renter_stakes[renter_addr] > 0, "Renter has no stake"
         
         total_accumulated: u256 = self.getRenterAccumulatedTotal(renter_addr)
@@ -133,7 +130,7 @@ contract BlockBoard:
         self.settleAllRentForRenter(renter_addr)
 
     @public
-    def unstakeRent():
+    fn unstakeRent():
         assert self.renter_stakes[msg.sender] > 0, "Renter has no stake"
 
         self.settleAllRentForRenter(msg.sender)
@@ -141,7 +138,7 @@ contract BlockBoard:
         self.renter_stakes[msg.sender] = 0
 
     // Private Helper
-    def settleAllRentForRenter(renter_addr: address):
+    fn settleAllRentForRenter(renter_addr: address):
         for billboard_token_id in self.billboard_token_list:
             if self.billboards_map[billboard_token_id].renter == renter_addr:
                 self.settleRentForBillboard(billboard_token_id)
