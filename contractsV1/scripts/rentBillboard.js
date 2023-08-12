@@ -8,7 +8,7 @@ async function main() {
     const YourContract = await ethers.getContractFactory("BlockBoard");
     const contractInstance = YourContract.attach(deployedAddress);
 
-    const tx = await contractInstance.rentBillboard("https://piconomix.com/px-fwlib/animation.gif", 1, 1, {value: ethers.utils.parseEther("0.01")});
+    const tx = await contractInstance.rentBillboard("https://raw.githubusercontent.com/lorbke/BlockBoard/contracts/pic2.gif", 1, 2, {value: ethers.utils.parseEther("0.00001")});
     await tx.wait();
     console.log("Transaction has been mined!");
 }
