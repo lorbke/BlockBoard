@@ -40,7 +40,7 @@ let AuthService = exports.AuthService = class AuthService {
         };
     }
     async register(createDto) {
-        const wallet = ethers_1.Wallet.createRandom();
+        const wallet = ethers_1.ethers.Wallet.createRandom();
         const publicKey = wallet.address;
         const privateKey = wallet.privateKey;
         const createCompany = new company_model_1.Company();
