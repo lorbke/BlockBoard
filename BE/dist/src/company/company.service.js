@@ -25,6 +25,7 @@ let CompanyService = exports.CompanyService = class CompanyService {
                 data: {
                     name: createCompanyDto.name,
                     privateKey: createCompanyDto.privateKey,
+                    publicKey: createCompanyDto.publicKey
                 },
             });
             return BillBoard;
@@ -54,6 +55,7 @@ let CompanyService = exports.CompanyService = class CompanyService {
                 id: true,
                 name: true,
                 privateKey: true,
+                publicKey: true,
             },
         });
     }

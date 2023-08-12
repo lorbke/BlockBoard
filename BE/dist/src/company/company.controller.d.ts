@@ -7,6 +7,7 @@ export declare class CompanyController {
         id: string;
         name: string;
         privateKey: string;
+        publicKey: string;
     }>;
     findAll(): Promise<{
         id: string;
@@ -16,10 +17,12 @@ export declare class CompanyController {
         id: string;
         name: string;
         privateKey: string;
+        publicKey: string;
     }>;
     remove(id: string): Promise<{
         id: string;
         name: string;
         privateKey: string;
+        publicKey: string;
     }>;
 }

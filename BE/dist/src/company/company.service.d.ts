@@ -14,10 +14,12 @@ export declare class CompanyService {
         id: string;
         name: string;
         privateKey: string;
+        publicKey: string;
     }>;
     remove(id: string): Promise<{
         id: string;
         name: string;
         privateKey: string;
+        publicKey: string;
     }>;
 }

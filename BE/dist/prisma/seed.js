@@ -31,7 +31,8 @@ async function main() {
         create: {
             id: 'company1',
             name: 'Google',
-            privateKey: 'imasuperprivatekey'
+            privateKey: 'imasuperprivatekey',
+            publicKey: 'iampublic'
         }
     });
     console.log({

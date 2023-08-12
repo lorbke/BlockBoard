@@ -11,12 +11,13 @@ datasource db {
 }
 
 model BillBoard {
-  id            String          @id @default(cuid())
-  walletAddress String          @unique
-  createdAt     DateTime        @default(now())
+  id            String              @id @default(cuid())
+  walletAddress String              @unique
+  createdAt     DateTime            @default(now())
   videoUrl      String?
   GeoX          String
   GeoY          String
+  status        BillBoardStatus      @default(FREE)
 
   renterId      String?
   renter        Company?    @relation("renting", fields: [renterId], references: [id], onDelete: Cascade)
@@ -26,6 +27,12 @@ model Company {
   id            String  @id @default(cuid())
   name          String  @unique
   privateKey    String  @unique
+  publicKey     String  @unique
 
   ownedBB       BillBoard[] @relation("renting")
+}
+
+enum BillBoardStatus {
+    FREE
+    RENTED
 }

@@ -17,6 +17,7 @@ export class CompanyService {
         data: {
           name: createCompanyDto.name,
           privateKey: createCompanyDto.privateKey,
+          publicKey: createCompanyDto.publicKey
         },
       });
 
@@ -47,6 +48,7 @@ export class CompanyService {
         id: true,
         name: true,
         privateKey: true,
+        publicKey: true,
       },
     });
   }
