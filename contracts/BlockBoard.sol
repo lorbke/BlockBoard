@@ -3,9 +3,6 @@ pragma solidity 0.8.18;
 
 contract BlockBoard {
 
-	// @todo do all error handling
-	// @todo do some testing
-	// @todo rename variables to shorthand for billboards
 	// @todo switch billboard address to NFT??
 	// @todo add events
 	// @todo custom token integration
