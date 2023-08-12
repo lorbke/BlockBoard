@@ -20,6 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@gelatonetwork/automate-sdk": "^2.14.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
     "@nestjs/jwt": "^10.1.0",
@@ -30,11 +31,13 @@
     "@prisma/client": "^5.1.1",
     "bcrypt": "^5.1.0",
     "class-validator": "^0.14.0",
-    "ethers": "^6.7.0",
+    "ethereumjs-tx": "^2.1.2",
+    "ethers": "^5.7.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "web3": "^4.0.3"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

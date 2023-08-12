@@ -6,7 +6,7 @@ import { LoginDto } from "./dto/login-user.dto";
 import * as bcrypt from 'bcrypt';
 import { RegisterUsersDto } from "./dto/register-user.dto";
 import { Company } from "src/company/company.model";
-import { Wallet } from 'ethers';
+import { ethers } from 'ethers';
 
 
 
@@ -36,10 +36,8 @@ export class AuthService {
           }
      }
 
-
-
      async register(createDto: RegisterUsersDto): Promise<any> {
-          const wallet = Wallet.createRandom();
+          const wallet = ethers.Wallet.createRandom();
           const publicKey = wallet.address;
           const privateKey = wallet.privateKey;
           const createCompany = new Company();
