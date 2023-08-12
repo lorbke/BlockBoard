@@ -1,3 +1,5 @@
 node_modules
 notes.txt
 *Zone.Identifier
+.env
+BE/node_modules

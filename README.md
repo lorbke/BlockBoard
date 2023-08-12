@@ -1,4 +1,6 @@
-# BlockBoard
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
+</p>
 
 _Revolutionizing Communication: Rent Message Boards on the Blockchain_
 
@@ -35,4 +37,3 @@ Traditional methods of **communication and advertisement** – billboards, newsp
     <img src="https://github.com/lorbke/BlockBoard/blob/assets/assets/BlockBoard_app_3.png" alt="BlockBoard App" style="margin-right: 20;">
     <img src="https://github.com/lorbke/BlockBoard/blob/assets/assets/BlockBoard_box.png" alt="BlockBoard Box" >
 </div>
-
