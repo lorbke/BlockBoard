@@ -10,9 +10,9 @@ export class RegisterUsersDto {
      @Length(6,18)
      password: string
      
-     @IsString()
-     privateKey: string
+     // @IsString()
+     // privateKey: string
      
-     @IsString()
-     publicKey:string
+     // @IsString()
+     // publicKey:string
 }

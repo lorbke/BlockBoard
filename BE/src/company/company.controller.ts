@@ -9,25 +9,25 @@ export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   create(@Body() createCompanyDto: CreateCompanyDto) {
     return this.companyService.create(createCompanyDto);
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   findAll() {
     return this.companyService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   findOne(@Param('id') id: string) {
     return this.companyService.findOne(id);
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   public async update(
     @Param('id') id: string,
     @Body() updateCompanyDto: UpdateCompanyDto,
@@ -36,7 +36,7 @@ export class CompanyController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   remove(@Param('id') id: string) {
     return this.companyService.remove(id);
   }

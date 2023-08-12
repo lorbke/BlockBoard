@@ -26,6 +26,13 @@ export class CompanyService {
     }
   }
 
+  async createCompany(data:
+    Company): Promise<Company>{
+      return this.prisma.company.create({
+      data,
+    });
+  }
+
   public async findAll() {
     try {
       const companies = await this.prisma.company.findMany({

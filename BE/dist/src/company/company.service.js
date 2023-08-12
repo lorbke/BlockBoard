@@ -32,6 +32,11 @@ let CompanyService = exports.CompanyService = class CompanyService {
             throw error;
         }
     }
+    async createCompany(data) {
+        return this.prisma.company.create({
+            data,
+        });
+    }
     async findAll() {
         try {
             const companies = await this.prisma.company.findMany({
