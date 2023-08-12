@@ -7,7 +7,6 @@ interface IBlockBoardNFT {
 
 contract BlockBoard {
 
-	// @todo switch billboard address to NFT??
 	// @todo add events
 	// @todo custom token integration
 	// @todo add initial stake to register billboard
@@ -24,6 +23,7 @@ contract BlockBoard {
 		uint256 long;
 	}
 
+	// @todo maybe move this data into the NFTs
 	struct Billboard {
 		bool exists;
 		uint256 earnings;
