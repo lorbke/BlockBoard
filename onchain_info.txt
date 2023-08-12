@@ -4,6 +4,13 @@ ZKEVM
 	rpc: https://rpc.public.zkevm-test.net
 
 goerli
-	main address: 0x6C485D7197e0018B5B11F6A0129b1a3f3409987d
-	nft address: 0x9c06649aF5a6006111Ccf11A9ffD65Ae54299D47
+	old main: 0x6C485D7197e0018B5B11F6A0129b1a3f3409987d
+
+	main address: 0xC46f60b22Fbd638913f1d8241E66aDb369108FEd
+	nft address: 0x1c6e0cf6bD1735D94cfBCd97426Ebf1545B5512C
 	rpc: https://ethereum-goerli.publicnode.com
+
+
+	with cost_per_block to zero:
+		BlockBoardNFT deployed to: 0x1fD5CEC4E24FF62F2c482B690B82CBad3C69F4cB
+		BlockBoard deployed to: 0xf5bd7ff5D55B21aBbB814F6FC906766c2E233e4a
