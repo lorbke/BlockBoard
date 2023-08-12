@@ -16,16 +16,14 @@ let CompanyService = exports.CompanyService = class CompanyService {
     constructor(prisma) {
         this.prisma = prisma;
     }
-    createer(createCompanyDto) {
-        return 'This action adds a new company';
-    }
     async create(createCompanyDto) {
         try {
             const BillBoard = await this.prisma.company.create({
                 data: {
-                    name: createCompanyDto.name,
+                    username: createCompanyDto.username,
                     privateKey: createCompanyDto.privateKey,
-                    publicKey: createCompanyDto.publicKey
+                    publicKey: createCompanyDto.publicKey,
+                    password: createCompanyDto.password
                 },
             });
             return BillBoard;
@@ -39,7 +37,7 @@ let CompanyService = exports.CompanyService = class CompanyService {
             const companies = await this.prisma.company.findMany({
                 select: {
                     id: true,
-                    name: true,
+                    username: true,
                 },
             });
             return companies;
@@ -53,7 +51,7 @@ let CompanyService = exports.CompanyService = class CompanyService {
             where: { id },
             select: {
                 id: true,
-                name: true,
+                username: true,
                 privateKey: true,
                 publicKey: true,
                 balance: true,
@@ -67,7 +65,7 @@ let CompanyService = exports.CompanyService = class CompanyService {
         try {
             const User = await this.prisma.company.update({
                 where: { id: id },
-                data: { name: updateCompanyDto.name },
+                data: { username: updateCompanyDto.username },
             });
             return User;
         }

@@ -6,32 +6,35 @@ export declare class CompanyController {
     constructor(companyService: CompanyService);
     create(createCompanyDto: CreateCompanyDto): Promise<{
         id: string;
-        name: string;
+        username: string;
+        password: string;
         privateKey: string;
         publicKey: string;
         balance: number;
     }>;
     findAll(): Promise<{
         id: string;
-        name: string;
+        username: string;
     }[]>;
     findOne(id: string): Promise<{
         id: string;
-        name: string;
+        username: string;
         privateKey: string;
         publicKey: string;
         balance: number;
     }>;
     update(id: string, updateCompanyDto: UpdateCompanyDto): Promise<{
         id: string;
-        name: string;
+        username: string;
+        password: string;
         privateKey: string;
         publicKey: string;
         balance: number;
     }>;
     remove(id: string): Promise<{
         id: string;
-        name: string;
+        username: string;
+        password: string;
         privateKey: string;
         publicKey: string;
         balance: number;

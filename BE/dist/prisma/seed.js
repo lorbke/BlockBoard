@@ -8,9 +8,10 @@ async function main() {
         update: {},
         create: {
             id: 'company1',
-            name: 'Google',
+            username: 'Google',
             privateKey: 'imasuperprivatekey',
             publicKey: 'iampublic',
+            password: 'bruhhh',
             ownedBB: {
                 create: [
                     {

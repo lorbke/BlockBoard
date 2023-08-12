@@ -25,7 +25,8 @@ model BillBoard {
 
 model Company {
   id            String  @id @default(cuid())
-  name          String  @unique
+  username      String  @unique @db.VarChar(45)  
+  password      String  @db.VarChar(100)
   privateKey    String  @unique
   publicKey     String  @unique
 

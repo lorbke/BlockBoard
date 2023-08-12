@@ -4,20 +4,19 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Company } from '@prisma/client';
 
+
 @Injectable()
 export class CompanyService {
   constructor(private prisma: PrismaService) {}
 
-  createer(createCompanyDto: CreateCompanyDto) {
-    return 'This action adds a new company';
-  }
   public async create(createCompanyDto: CreateCompanyDto): Promise<Company> {
     try {
       const BillBoard = await this.prisma.company.create({
         data: {
-          name: createCompanyDto.name,
+          username: createCompanyDto.username,
           privateKey: createCompanyDto.privateKey,
-          publicKey: createCompanyDto.publicKey
+          publicKey: createCompanyDto.publicKey,
+          password: createCompanyDto.password
         },
       });
 
@@ -32,7 +31,7 @@ export class CompanyService {
       const companies = await this.prisma.company.findMany({
         select: {
           id: true,
-          name: true,
+          username: true,
         },
       });
       return companies;
@@ -46,7 +45,7 @@ export class CompanyService {
       where: { id },
       select: {
         id: true,
-        name: true,
+        username: true,
         privateKey: true,
         publicKey: true,
         balance: true,
@@ -62,7 +61,7 @@ export class CompanyService {
     try {
       const User = await this.prisma.company.update({
         where: { id: id},
-        data: { name: updateCompanyDto.name },
+        data: { username: updateCompanyDto.username },
       });
 
       return User;

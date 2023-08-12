@@ -17,7 +17,7 @@ exports.CreateCompanyDto = CreateCompanyDto;
 __decorate([
     (0, swagger_1.ApiProperty)({ required: true }),
     __metadata("design:type", String)
-], CreateCompanyDto.prototype, "name", void 0);
+], CreateCompanyDto.prototype, "username", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({ required: true }),
     __metadata("design:type", String)
@@ -26,4 +26,8 @@ __decorate([
     (0, swagger_1.ApiProperty)({ required: true }),
     __metadata("design:type", String)
 ], CreateCompanyDto.prototype, "publicKey", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({ required: true }),
+    __metadata("design:type", String)
+], CreateCompanyDto.prototype, "password", void 0);
 //# sourceMappingURL=create-company.dto.js.map
