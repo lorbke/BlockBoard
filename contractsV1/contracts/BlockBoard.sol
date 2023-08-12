@@ -40,6 +40,7 @@ contract BlockBoard {
 
 	mapping(uint256 => Billboard) public billboards_map;
 	uint256[] public billboard_token_list;
+	uint256 public billboard_token_list_length;
 	mapping(address => uint256) public renter_stakes;
 
 	/*------------------------------------------------------------------------------------*/
@@ -99,6 +100,8 @@ contract BlockBoard {
 		billboards_map[billboard_token_id].earnings += stake_before - stake_after;
 		billboards_map[billboard_token_id].cost_per_block = 0;
 		billboards_map[billboard_token_id].renter = address(0);
+		billboards_map[billboard_token_id].ad_url = "";
+		billboards_map[billboard_token_id].cost_per_block = 0;
 	}
 
 	function settleAllRentForRenter(address renter_addr) private {
@@ -125,6 +128,7 @@ contract BlockBoard {
 		uint256 token_id = nft_contract.mint(msg.sender);
 		Billboard memory billboard = Billboard(true, 0, token_id, msg.sender, location, "", address(0), 0, 0);
 		billboard_token_list.push(token_id);
+		billboard_token_list_length++;
 		billboards_map[token_id] = billboard;
 	}
 
