@@ -1,17 +1,29 @@
 # BlockBoard
 
-### Revolutionizing Communication: Rent Message Boards on the Blockchain
+_Revolutionizing Communication: Rent Message Boards on the Blockchain_
 
 ![BlockBoard Logo](https://github.com/lorbke/BlockBoard/blob/assets/assets/BlockBoard_origin.png)
 
-## The Problem:
+## The Problem
 
-Traditional methods of communication and advertisement, such as physical bulletin boards, posters, and flyers, are often static, localized, and lack efficient management. These methods can also be wasteful, as they generate paper waste and lack a dynamic, trackable, and secure way of conveying messages to a targeted audience.
+Traditional methods of communication and advertisement – billboards, newspapers, TV – are limited by geography, high costs, and opacity. For advertisers, it's hard to measure genuine reach. For the public, content is often out of their control. Smaller voices struggle to be heard amidst monopolistic giants.
 
-## Our Solution:
+## Our Solution
 
-BlockBoard aims to revolutionize communication and advertisement by leveraging Blockchain technology. It offers a decentralized platform where users can "rent" virtual message boards that are secured and managed on the blockchain.
+**BlockBoard** aims to revolutionize communication and advertisement by leveraging Blockchain technology. It offers a decentralized platform where users can "rent" physical message boards. They can manage the time and location of their messages by interacting with Smart contracts.
 
+#### Key Features
+1. **Decentralized Management**: With BlockBoard, no central entity controls the message boards. Anyone can rent space on a board by engaging with the associated smart contract, ensuring that it is transparent and tamper-proof.
+
+2. **Proof of Display**: Using IoT devices and blockchain, BlockBoard provides verifiable proof that an advertisement or message was displayed on a board for a given duration, helping advertisers measure genuine reach.
+
+3. **Dynamic Pricing**: Pricing is based on demand and location, with high-demand areas commanding a higher price. The transparent pricing mechanism ensures fair pricing for all.
+
+4. **Accessible to All**: Anyone, regardless of their resources, can rent a message board for their personal, commercial, or social messages. A fraction of boards is reserved for non-commercial messages, allowing for important social issues to be highlighted.
+5. **Environmental Concerns**: BlockBoard promotes the use of electronic message boards, which reduce the need for paper-based advertisement, supporting a more eco-friendly approach.
+6. **Community Engagement**: Users can rate and review content on the boards, providing feedback and enhancing community engagement.
+7. **Secure Payment System**: Payments are made via ETH or any ERC-20 token. Smart contracts handle the funds, releasing them to the board owner only when proof of display is verified.
+8. **Scalability**: BlockBoard has the potential to integrate with other blockchain projects, opening doors for collaborations with augmented reality platforms, geolocation-based services, and more.
 
 ## The Product
 
