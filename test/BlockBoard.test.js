@@ -17,18 +17,23 @@ describe("BlockBoard: basics and getters", function () {
 	const signers = await ethers.getSigners();
 	owner = signers[0];
 	renter = signers[1];
+
+	const BlockBoardNFT = await ethers.getContractFactory("BlockBoardNFT");
+	blockBoardNFT = await BlockBoardNFT.deploy();
+	await blockBoardNFT.deployed();
+
     const BlockBoard = await ethers.getContractFactory("BlockBoard");
-    blockBoard = await BlockBoard.deploy();
+    blockBoard = await BlockBoard.deploy(blockBoardNFT.address);
     await blockBoard.deployed();
 });
 
 it("should allow registering a billboard", async function () {
 	await blockBoard.connect(owner).registerBillboard(48284306, 12345678);
-    const billboard_owner = await blockBoard.billboard_owners_list(0);
-	const billboard = await blockBoard.billboards_map(billboard_owner);
+	billboard_id = await blockBoardNFT.tokenOfOwnerByIndex(owner.address, 0);
+	const billboard = await blockBoard.billboards_map(billboard_id);
     expect(billboard.owner).to.not.equal(ethers.constants.AddressZero);
 	expect(billboard.owner).to.equal(owner.address);
-	const billboard2 = await blockBoard.billboards_map(billboard.owner);
+	const billboard2 = await blockBoard.billboards_map(billboard_id);
 	expect(billboard2.owner).to.equal(owner.address);
 });
 

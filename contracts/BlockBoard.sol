@@ -1,6 +1,10 @@
 // SPDX-License-Identifier: SEE LICENSE IN LICENSE
 pragma solidity 0.8.18;
 
+interface IBlockBoardNFT {
+	function mint(address recipient) external returns (uint256 token_id);
+}
+
 contract BlockBoard {
 
 	// @todo switch billboard address to NFT??
@@ -9,13 +13,21 @@ contract BlockBoard {
 	// @todo add initial stake to register billboard
 	// @todo reporting mechanism
 
+	/*------------------------------------------------------------------------------------*/
+	/* 	DATA STRUCTURE                                                                    */
+	/*------------------------------------------------------------------------------------*/
+
+	IBlockBoardNFT nft_contract;
+
 	struct GeoPoint {
 		uint256 lat; // 48.284306 // 48284306 -> multiplied by 10^6
 		uint256 long;
 	}
 
 	struct Billboard {
+		bool exists;
 		uint256 earnings;
+		uint256 token_id;
 		address owner;
 		GeoPoint location;
 		string ad_url;
@@ -26,12 +38,77 @@ contract BlockBoard {
 
 	uint256 constant public BOUNTY_PERCENTAGE = 2;
 
-	mapping(address => Billboard) public billboards_map;
-	address[] public billboard_owners_list;
+	mapping(uint256 => Billboard) public billboards_map;
+	uint256[] public billboard_token_list;
 	mapping(address => uint256) public renter_stakes;
 
-	constructor() {
+	/*------------------------------------------------------------------------------------*/
+	/* 	CONSTRUCTOR                                                                       */
+	/*------------------------------------------------------------------------------------*/
+
+	constructor(address nft_contract_addr) {
+		nft_contract = IBlockBoardNFT(nft_contract_addr);
 	}
+
+	/*------------------------------------------------------------------------------------*/
+	/* 	HELPER FUNCTIONS                                                                  */
+	/*------------------------------------------------------------------------------------*/
+
+	// get earnings of billboard
+	function getRentForBillboard(uint256 billboard_token_id) public view returns (uint256 accumulated) {
+		require (billboards_map[billboard_token_id].exists == true, "Billboard does not exist");
+		uint256 block_of_rent = billboards_map[billboard_token_id].block_of_rent;
+		uint256 cost_per_block = billboards_map[billboard_token_id].cost_per_block;
+
+		return (block.number - block_of_rent) * cost_per_block;
+	}
+
+	function getRenterAccumulatedTotal(address renter_addr) public view returns (uint256 accumulated) {
+		accumulated = 0;
+		for (uint256 i = 0; i < billboard_token_list.length; i++) {
+			Billboard memory curr = billboards_map[billboard_token_list[i]];
+			if (curr.renter == renter_addr)
+				accumulated += getRentForBillboard(curr.token_id);
+		}
+		return accumulated;
+	}
+
+	function getRenterAccumulatingPerBlock(address renter_addr) public view returns (uint256 accumulating_per_block) {
+		accumulating_per_block = 0;
+		for (uint256 i = 0; i < billboard_token_list.length; i++) {
+			Billboard memory curr = billboards_map[billboard_token_list[i]];
+			if (curr.renter == renter_addr)
+				accumulating_per_block += curr.cost_per_block;
+		}
+		return accumulating_per_block;
+	}
+
+	function settleRentForBillboard(uint256 billboard_token_id) private {
+		uint256 accumulated = getRentForBillboard(billboard_token_id);
+		address renter = billboards_map[billboard_token_id].renter;
+
+		uint256 stake_before = renter_stakes[renter];
+		if (renter_stakes[renter] > accumulated)
+			renter_stakes[renter] -= accumulated;
+		else
+			renter_stakes[renter] = 0;
+		uint256 stake_after = renter_stakes[renter];
+		billboards_map[billboard_token_id].earnings += stake_before - stake_after;
+		billboards_map[billboard_token_id].cost_per_block = 0;
+		billboards_map[billboard_token_id].renter = address(0);
+	}
+
+	function settleAllRentForRenter(address renter_addr) private {
+		for (uint256 i = 0; i < billboard_token_list.length; i++) {
+			Billboard memory curr = billboards_map[billboard_token_list[i]];
+			if (curr.renter == renter_addr)
+				settleRentForBillboard(curr.token_id);
+		}
+	}
+
+	/*------------------------------------------------------------------------------------*/
+	/* 	MAIN FUNCTIONS                                                                    */
+	/*------------------------------------------------------------------------------------*/
 
 	function getAd(address billboard_addr) public pure returns (string memory ad_url) {
 		// return billboards_map[billboard_addr].ad_url;
@@ -40,66 +117,29 @@ contract BlockBoard {
 	}
 
 	function registerBillboard(uint256 geo_lat, uint256 geo_y) public {
-		require (billboards_map[msg.sender].owner == address(0), "Billboard already exists");
-
 		GeoPoint memory location = GeoPoint(geo_lat, geo_y);
-		Billboard memory billboard = Billboard(0, msg.sender, location, "", address(0), 0, 0);
-		billboards_map[msg.sender] = billboard;
-		billboard_owners_list.push(msg.sender);
+		uint256 token_id = nft_contract.mint(msg.sender);
+		Billboard memory billboard = Billboard(true, 0, token_id, msg.sender, location, "", address(0), 0, 0);
+		billboard_token_list.push(token_id);
+		billboards_map[token_id] = billboard;
 	}
 
-	// get earnings of billboard
-	function getRentForBillboard(address billboard_addr) public view returns (uint256 accumulated) {
-		require (billboards_map[billboard_addr].owner != address(0), "Billboard does not exist");
-		uint256 block_of_rent = billboards_map[billboard_addr].block_of_rent;
-		uint256 cost_per_block = billboards_map[billboard_addr].cost_per_block;
+	function rentBillboard(string memory ad_url, uint256 billboard_token_id, uint256 cost_per_block) public payable {
+		require (billboards_map[billboard_token_id].exists == true, "Billboard does not exist");
+		require (billboards_map[billboard_token_id].cost_per_block <= cost_per_block, "New cost per block has to be higher than previous cost per block");
+		require (msg.value >= cost_per_block, "Not enough stake provided");
 
-		return (block.number - block_of_rent) * cost_per_block;
-	}
+		settleRentForBillboard(billboard_token_id);
 
-	function getRenterAccumulatedTotal(address renter_addr) public view returns (uint256 accumulated) {
-		for (uint256 i = 0; i < billboard_owners_list.length; i++) {
-			Billboard memory curr = billboards_map[billboard_owners_list[i]];
-			if (curr.renter == renter_addr)
-				accumulated += getRentForBillboard(curr.owner);
-		}
-		return accumulated;
-	}
-
-	function getRenterAccumulatingPerBlock(address renter_addr) public view returns (uint256 accumulating_per_block) {
-		for (uint256 i = 0; i < billboard_owners_list.length; i++) {
-			Billboard memory curr = billboards_map[billboard_owners_list[i]];
-			if (curr.renter == renter_addr)
-				accumulating_per_block += curr.cost_per_block;
-		}
-		return accumulating_per_block;
-	}
-
-	function settleRentForBillboard(address billboard_addr) private {
-		uint256 accumulated = getRentForBillboard(billboard_addr);
-		address renter = billboards_map[billboard_addr].renter;
-
-		uint256 stake_before = renter_stakes[renter];
-		if (renter_stakes[renter] > accumulated)
-			renter_stakes[renter] -= accumulated;
-		else
-			renter_stakes[renter] = 0;
-		uint256 stake_after = renter_stakes[renter];
-		billboards_map[billboard_addr].earnings += stake_before - stake_after;
-		billboards_map[billboard_addr].cost_per_block = 0;
-		billboards_map[billboard_addr].renter = address(0);
-	}
-
-	function settleAllRentForRenter(address renter_addr) private {
-		for (uint256 i = 0; i < billboard_owners_list.length; i++) {
-			Billboard memory curr = billboards_map[billboard_owners_list[i]];
-			if (curr.renter == renter_addr)
-				settleRentForBillboard(curr.owner);
-		}
+		renter_stakes[msg.sender] = msg.value;
+		billboards_map[billboard_token_id].renter = msg.sender;
+		billboards_map[billboard_token_id].cost_per_block = cost_per_block;
+		billboards_map[billboard_token_id].block_of_rent = block.number;
+		billboards_map[billboard_token_id].ad_url = ad_url;
 	}
 
 	// gelato bot can call this
-	// @todo fix weird bounty bug; there should always be a bounty
+	// @todo fix weird bounty bug; there should always be a bounty, but if called too late there is none
 	function killRenter(address renter_addr) public {
 		require (renter_stakes[renter_addr] > 0, "Renter has no stake");
 		uint256 total_accumulated = getRenterAccumulatedTotal(renter_addr);
@@ -111,20 +151,6 @@ contract BlockBoard {
 		payable(msg.sender).transfer(bounty);
 
 		settleAllRentForRenter(renter_addr);
-	}
-
-	function rentBillboard(string memory ad_url, address billboard_addr, uint256 cost_per_block) public payable {
-		require (billboards_map[billboard_addr].owner != address(0), "Billboard does not exist");
-		require (billboards_map[billboard_addr].cost_per_block <= cost_per_block, "New cost per block has to be higher than previous cost per block");
-		require (msg.value >= cost_per_block, "Not enough stake provided");
-
-		settleRentForBillboard(billboard_addr);
-
-		renter_stakes[msg.sender] = msg.value;
-		billboards_map[billboard_addr].renter = msg.sender;
-		billboards_map[billboard_addr].cost_per_block = cost_per_block;
-		billboards_map[billboard_addr].block_of_rent = block.number;
-		billboards_map[billboard_addr].ad_url = ad_url;
 	}
 
 	function unstakeRent() public {

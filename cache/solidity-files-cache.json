@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/luca/Desktop/ETHMunich/BlockBoard/contracts/BlockBoard.sol": {
-      "lastModificationDate": 1691847582053,
-      "contentHash": "765ccde9943c82fa7a79cac110f7349c",
+      "lastModificationDate": 1691850184080,
+      "contentHash": "64464054d41b055737eb1ade09c7a7ba",
       "sourceName": "contracts/BlockBoard.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -33,12 +33,13 @@
         "0.8.18"
       ],
       "artifacts": [
-        "BlockBoard"
+        "BlockBoard",
+        "IBlockBoardNFT"
       ]
     },
     "/Users/luca/Desktop/ETHMunich/BlockBoard/contracts/BlockBoardNFT.sol": {
-      "lastModificationDate": 1691847281409,
-      "contentHash": "7e3fcfd99363b755dc5b38835b720ab5",
+      "lastModificationDate": 1691850387739,
+      "contentHash": "fe0078a5d0580041242e8c8f83674dea",
       "sourceName": "contracts/BlockBoardNFT.sol",
       "solcConfig": {
         "version": "0.8.18",
@@ -65,8 +66,7 @@
       },
       "imports": [
         "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol",
-        "@openzeppelin/contracts/utils/Counters.sol",
-        "@openzeppelin/contracts/access/Ownable.sol"
+        "@openzeppelin/contracts/utils/Counters.sol"
       ],
       "versionPragmas": [
         "0.8.18"
