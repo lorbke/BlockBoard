@@ -94,7 +94,7 @@ contract BlockBoard {
 
 	function rentBillboard(string memory ad_url, address billboard_addr, uint256 cost_per_block) public payable {
 		require (billboards_map[billboard_addr].addr != address(0), "Billboard does not exist");
-		require (billboards_map[billboard_addr].cost_per_block <= cost_per_block, "Cost per block is too low");
+		require (billboards_map[billboard_addr].cost_per_block <= cost_per_block, "New cost per block has to be higher than previous cost per block");
 		require (msg.value >= cost_per_block, "Not enough stake provided");
 
 		settleRentForBillboard(billboard_addr);
@@ -108,6 +108,7 @@ contract BlockBoard {
 
 	function unstakeRent() public {
 		require (renter_stakes[msg.sender] > 0, "Renter has no stake");
+
 		settleRentAll(msg.sender);
 		payable(msg.sender).transfer(renter_stakes[msg.sender]);
 		renter_stakes[msg.sender] = 0;
