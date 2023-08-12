@@ -29,6 +29,7 @@ contract BlockBoard {
 	constructor() {
 	}
 
+	// @todo add initial stake to register billboard
 	function registerBillboard(uint256 geo_lat, uint256 geo_y) public {
 		require (billboards_map[msg.sender].addr == address(0), "Billboard already exists");
 		GeoPoint memory location = GeoPoint(geo_lat, geo_y);
