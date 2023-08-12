@@ -39,3 +39,8 @@ enum BillBoardStatus {
     FREE
     RENTED
 }
+
+  {
+    "username": "Google",
+    "password": "bruhhh"
+  }

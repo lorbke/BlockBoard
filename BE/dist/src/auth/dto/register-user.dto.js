@@ -24,12 +24,4 @@ __decorate([
     (0, class_validator_1.Length)(6, 18),
     __metadata("design:type", String)
 ], RegisterUsersDto.prototype, "password", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], RegisterUsersDto.prototype, "privateKey", void 0);
-__decorate([
-    (0, class_validator_1.IsString)(),
-    __metadata("design:type", String)
-], RegisterUsersDto.prototype, "publicKey", void 0);
 //# sourceMappingURL=register-user.dto.js.map
