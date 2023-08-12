@@ -4,6 +4,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Company } from '@prisma/client';
 export declare class CompanyService {
     private prisma;
+    private provider;
+    private mainContract;
     constructor(prisma: PrismaService);
     create(createCompanyDto: CreateCompanyDto): Promise<Company>;
     createCompany(data: Company): Promise<Company>;
@@ -35,4 +37,5 @@ export declare class CompanyService {
         balance: number;
     }>;
     updateCompanyBalance(id: string, balance: number): Promise<void>;
+    getRentedByCompany(): Promise<any[]>;
 }

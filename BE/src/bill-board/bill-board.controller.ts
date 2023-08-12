@@ -12,9 +12,14 @@ export class BillBoardController {
     return this.billBoardService.create(createBillBoardDto);
   }
 
+  // @Get()
+  // findAll() {
+  //   return this.billBoardService.findAll();
+  // }
+
   @Get()
-  findAll() {
-    return this.billBoardService.findAll();
+  findAllBillBoard() {
+    return this.billBoardService.findAllBillBoard();
   }
 
   @Get(':id')

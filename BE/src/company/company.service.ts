@@ -3,11 +3,21 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Company } from '@prisma/client';
+import { ethers } from 'ethers';
+import * as abi from '../blockchain-interface/abi.json';
+
+const mainContractAddress = process.env.ADDRESS;
+const privateKey = process.env.PRIVATE_KEY
 
 
 @Injectable()
 export class CompanyService {
-  constructor(private prisma: PrismaService) {}
+  private provider: ethers.providers.JsonRpcProvider;
+  private mainContract: ethers.Contract;
+  constructor(private prisma: PrismaService) {
+    this.provider = new ethers.providers.JsonRpcBatchProvider(process.env.API_URL);
+    this.mainContract = new ethers.Contract(mainContractAddress, abi, this.provider);
+   }
 
   public async create(createCompanyDto: CreateCompanyDto): Promise<Company> {
     try {
@@ -27,8 +37,8 @@ export class CompanyService {
   }
 
   async createCompany(data:
-    Company): Promise<Company>{
-      return this.prisma.company.create({
+    Company): Promise<Company> {
+    return this.prisma.company.create({
       data,
     });
   }
@@ -60,6 +70,8 @@ export class CompanyService {
     });
   }
 
+
+
   public async remove(id: string) {
     return this.prisma.company.delete({ where: { id } });
   }
@@ -67,7 +79,7 @@ export class CompanyService {
   public async update(id: string, updateCompanyDto: UpdateCompanyDto) {
     try {
       const User = await this.prisma.company.update({
-        where: { id: id},
+        where: { id: id },
         data: { username: updateCompanyDto.username },
       });
 
@@ -89,19 +101,38 @@ export class CompanyService {
           },
         });
       }
-    } catch (error) {}
+    } catch (error) { }
   }
 
-  // public async  getBalance(id: string) {
-  //   return this.prisma.company.findUnique({
-  //     where: { id },
-  //     select: {
-  //       balance: true
-  //     },
-  //   });
-  // }
+  public async getRentedByCompany() {
+    console.log('bruuuh')
+    try {
+      const provider = new ethers.providers.JsonRpcProvider(process.env.API_URL);
+      const signer = new ethers.Wallet(privateKey, provider)
+      const totalTokens = await this.mainContract.billboard_token_list_length();
+      console.log(totalTokens);
+      const billboardData = [];
 
-  // update(id: number, updateCompanyDto: UpdateCompanyDto) {
-  //   return `This action updates a #${id} company`;
-  // }
+      for (let i = 0; i < totalTokens; i++) {
+        const billboardInfo = await this.mainContract.billboards_map(i);
+        const billboardId = await this.mainContract.billboard_token_list(i);
+        // const walletAddress = billboardInfo.walletAddress;
+
+        const billboard = {
+          id: billboardId,
+          info: billboardInfo
+        };
+        console.log(billboardInfo.renter, signer.address)
+        if (billboardInfo.renter == signer.address)
+        {
+          billboardData.push(billboard);
+        }
+      }
+
+      return billboardData;
+    } catch (error) {
+      console.error('Error:', error);
+      return [];
+    }
+  }
 }

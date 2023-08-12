@@ -3,6 +3,8 @@ import { CreateBillBoardDto } from './dto/create-bill-board.dto';
 import { PrismaService } from '../prisma/prisma.service';
 export declare class BillBoardService {
     private prisma;
+    private provider;
+    private mainContract;
     constructor(prisma: PrismaService);
     getFileUrl(id: string): Promise<string>;
     setFileUrl(videoUrl: string, walletAddress: string): Promise<void>;
@@ -17,6 +19,7 @@ export declare class BillBoardService {
         GeoX: string;
         GeoY: string;
     }>;
+    findAllBillBoard(): Promise<any[]>;
     remove(id: string): Promise<{
         id: string;
         walletAddress: string;

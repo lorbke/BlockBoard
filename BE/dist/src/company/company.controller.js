@@ -21,6 +21,10 @@ let CompanyController = exports.CompanyController = class CompanyController {
     constructor(companyService) {
         this.companyService = companyService;
     }
+    getRentedByCompany() {
+        console.log('bsfddsf');
+        return this.companyService.getRentedByCompany();
+    }
     create(createCompanyDto) {
         return this.companyService.create(createCompanyDto);
     }
@@ -37,6 +41,12 @@ let CompanyController = exports.CompanyController = class CompanyController {
         return this.companyService.remove(id);
     }
 };
+__decorate([
+    (0, common_1.Get)('getRentedByCompany'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], CompanyController.prototype, "getRentedByCompany", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
