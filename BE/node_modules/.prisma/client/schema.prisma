@@ -20,7 +20,7 @@ model BillBoard {
   status        BillBoardStatus      @default(FREE)
 
   renterId      String?
-  renter        Company?    @relation("renting", fields: [renterId], references: [id], onDelete: Cascade)
+  renter        Company?    @relation("renting", fields: [renterId], references: [publicKey], onDelete: Cascade)
 }
 
 model Company {
@@ -28,6 +28,8 @@ model Company {
   name          String  @unique
   privateKey    String  @unique
   publicKey     String  @unique
+
+  balance       Int     @default(0)
 
   ownedBB       BillBoard[] @relation("renting")
 }

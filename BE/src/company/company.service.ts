@@ -49,6 +49,7 @@ export class CompanyService {
         name: true,
         privateKey: true,
         publicKey: true,
+        balance: true,
       },
     });
   }
@@ -56,6 +57,43 @@ export class CompanyService {
   public async remove(id: string) {
     return this.prisma.company.delete({ where: { id } });
   }
+
+  public async update(id: string, updateCompanyDto: UpdateCompanyDto) {
+    try {
+      const User = await this.prisma.company.update({
+        where: { id: id},
+        data: { name: updateCompanyDto.name },
+      });
+
+      return User;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async updateCompanyBalance(id: string, balance: number) {
+    try {
+      if (id) {
+        await this.prisma.company.update({
+          where: {
+            id: id,
+          },
+          data: {
+            balance: balance,
+          },
+        });
+      }
+    } catch (error) {}
+  }
+
+  // public async  getBalance(id: string) {
+  //   return this.prisma.company.findUnique({
+  //     where: { id },
+  //     select: {
+  //       balance: true
+  //     },
+  //   });
+  // }
 
   // update(id: number, updateCompanyDto: UpdateCompanyDto) {
   //   return `This action updates a #${id} company`;

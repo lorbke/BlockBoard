@@ -22,6 +22,14 @@ export class CompanyController {
     return this.companyService.findOne(id);
   }
 
+  @Patch(':id')
+  public async update(
+    @Param('id') id: string,
+    @Body() updateCompanyDto: UpdateCompanyDto,
+  ) {
+    return this.companyService.update(id, updateCompanyDto);
+  }
+
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.companyService.remove(id);

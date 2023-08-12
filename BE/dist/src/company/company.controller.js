@@ -16,6 +16,7 @@ exports.CompanyController = void 0;
 const common_1 = require("@nestjs/common");
 const company_service_1 = require("./company.service");
 const create_company_dto_1 = require("./dto/create-company.dto");
+const update_company_dto_1 = require("./dto/update-company.dto");
 let CompanyController = exports.CompanyController = class CompanyController {
     constructor(companyService) {
         this.companyService = companyService;
@@ -28,6 +29,9 @@ let CompanyController = exports.CompanyController = class CompanyController {
     }
     findOne(id) {
         return this.companyService.findOne(id);
+    }
+    async update(id, updateCompanyDto) {
+        return this.companyService.update(id, updateCompanyDto);
     }
     remove(id) {
         return this.companyService.remove(id);
@@ -53,6 +57,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], CompanyController.prototype, "findOne", null);
+__decorate([
+    (0, common_1.Patch)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, update_company_dto_1.UpdateCompanyDto]),
+    __metadata("design:returntype", Promise)
+], CompanyController.prototype, "update", null);
 __decorate([
     (0, common_1.Delete)(':id'),
     __param(0, (0, common_1.Param)('id')),

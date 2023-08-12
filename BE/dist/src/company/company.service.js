@@ -56,11 +56,39 @@ let CompanyService = exports.CompanyService = class CompanyService {
                 name: true,
                 privateKey: true,
                 publicKey: true,
+                balance: true,
             },
         });
     }
     async remove(id) {
         return this.prisma.company.delete({ where: { id } });
+    }
+    async update(id, updateCompanyDto) {
+        try {
+            const User = await this.prisma.company.update({
+                where: { id: id },
+                data: { name: updateCompanyDto.name },
+            });
+            return User;
+        }
+        catch (error) {
+            throw error;
+        }
+    }
+    async updateCompanyBalance(id, balance) {
+        try {
+            if (id) {
+                await this.prisma.company.update({
+                    where: {
+                        id: id,
+                    },
+                    data: {
+                        balance: balance,
+                    },
+                });
+            }
+        }
+        catch (error) { }
     }
 };
 exports.CompanyService = CompanyService = __decorate([

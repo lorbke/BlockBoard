@@ -24,6 +24,7 @@ export declare class BillBoardService {
         videoUrl: string;
         GeoX: string;
         GeoY: string;
+        status: import(".prisma/client").$Enums.BillBoardStatus;
         renterId: string;
     }>;
 }

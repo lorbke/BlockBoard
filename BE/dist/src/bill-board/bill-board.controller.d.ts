@@ -10,6 +10,7 @@ export declare class BillBoardController {
         videoUrl: string;
         GeoX: string;
         GeoY: string;
+        status: import(".prisma/client").$Enums.BillBoardStatus;
         renterId: string;
     }>;
     findAll(): Promise<{
@@ -29,6 +30,7 @@ export declare class BillBoardController {
         videoUrl: string;
         GeoX: string;
         GeoY: string;
+        status: import(".prisma/client").$Enums.BillBoardStatus;
         renterId: string;
     }>;
 }
