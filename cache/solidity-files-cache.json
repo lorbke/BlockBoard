@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/luca/Desktop/ETHMunich/BlockBoard/contracts/BlockBoard.sol": {
-      "lastModificationDate": 1691850184080,
-      "contentHash": "64464054d41b055737eb1ade09c7a7ba",
+      "lastModificationDate": 1691850899238,
+      "contentHash": "f994da954f3508d631ee0138bf05e976",
       "sourceName": "contracts/BlockBoard.sol",
       "solcConfig": {
         "version": "0.8.18",

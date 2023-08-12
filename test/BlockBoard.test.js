@@ -41,10 +41,11 @@ it("should allow renting a billboard", async function () {
 	const ad_url = "https://example.com";
 	const cost_per_block = ethers.utils.parseEther("0.1");
 	const renter_stake = ethers.utils.parseEther("1");
-    await blockBoard.connect(renter).rentBillboard(ad_url, owner.address, cost_per_block, {
+	billboard_id = await blockBoardNFT.tokenOfOwnerByIndex(owner.address, 0);
+    await blockBoard.connect(renter).rentBillboard(ad_url, billboard_id, cost_per_block, {
 		value: renter_stake,
     });
-    const billboard = await blockBoard.billboards_map(owner.address);
+    const billboard = await blockBoard.billboards_map(billboard_id);
 	const contract_renter_stake = await blockBoard.renter_stakes(renter.address);
     expect(billboard.renter).to.equal(renter.address);
 	expect(billboard.block_of_rent).to.equal(await ethers.provider.getBlockNumber());
@@ -55,11 +56,8 @@ it("should allow renting a billboard", async function () {
 
   it("should calculate accumulated rent for a single billboard", async function () {
 	await mineBlocks(9);
-	const rent = await blockBoard.getRentForBillboard(owner.address);
-	const billboard_owner = await blockBoard.billboard_owners_list(0);
-	const billboard = await blockBoard.billboards_map(billboard_owner);
-	console.log("billboard: ", billboard.renter);
-	console.log("renter address: ", renter.address);
+	billboard_id = await blockBoardNFT.tokenOfOwnerByIndex(owner.address, 0);
+	const rent = await blockBoard.getRentForBillboard(billboard_id);
     expect(rent).to.be.gt(0);
 	expect(rent).to.equal(ethers.utils.parseEther("0.9"));
   });
@@ -91,8 +89,13 @@ describe("BlockBoard: fancy shit", function () {
 	owner = signers[0];
 	renter = signers[1];
 	killer = signers[2];
+
+	const BlockBoardNFT = await ethers.getContractFactory("BlockBoardNFT");
+	blockBoardNFT = await BlockBoardNFT.deploy();
+	await blockBoardNFT.deployed();
+
     const BlockBoard = await ethers.getContractFactory("BlockBoard");
-    blockBoard = await BlockBoard.deploy();
+    blockBoard = await BlockBoard.deploy(blockBoardNFT.address);
     await blockBoard.deployed();
 
 	// prepare for test
@@ -100,11 +103,12 @@ describe("BlockBoard: fancy shit", function () {
 	const ad_url = "https://example.com";
 	const cost_per_block = ethers.utils.parseEther("0.1");
 	const renter_stake = ethers.utils.parseEther("1");
-    await blockBoard.connect(renter).rentBillboard(ad_url, owner.address, cost_per_block, {
+	billboard_id = await blockBoardNFT.tokenOfOwnerByIndex(owner.address, 0);
+    await blockBoard.connect(renter).rentBillboard(ad_url, billboard_id, cost_per_block, {
       value: renter_stake,
     });
-	console.log("renter address of billboard: ", blockBoard.billboards_map(owner.address).renter);
-	await mineBlocks(9);
+	console.log("renter address of billboard: ", blockBoard.billboards_map(billboard_id).renter);
+	await mineBlocks(8);
   });
 
   it("should allow unstaking rent", async function () {
