@@ -1,0 +1,9 @@
+ZKEVM
+	main address: 0x181242Cc8290CC779cd267520c27527aCc465578
+	nft address: 0x85a8454Ed9255C9Fd22f9741AA5bCc9532c556D2
+	rpc: https://rpc.public.zkevm-test.net
+
+goerli
+	main address: 0x6C485D7197e0018B5B11F6A0129b1a3f3409987d
+	nft address: 0x9c06649aF5a6006111Ccf11A9ffD65Ae54299D47
+	rpc: https://ethereum-goerli.publicnode.com
