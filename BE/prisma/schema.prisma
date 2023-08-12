@@ -1,0 +1,31 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model BillBoard {
+  id            String          @id @default(cuid())
+  walletAddress String          @unique
+  createdAt     DateTime        @default(now())
+  videoUrl      String?
+  GeoX          String
+  GeoY          String
+
+  renterId      String?
+  renter        Company?    @relation("renting", fields: [renterId], references: [id], onDelete: Cascade)
+}
+
+model Company {
+  id            String  @id @default(cuid())
+  name          String  @unique
+  privateKey    String  @unique
+
+  ownedBB       BillBoard[] @relation("renting")
+}
