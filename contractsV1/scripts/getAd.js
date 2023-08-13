@@ -1,12 +1,11 @@
 const { ethers } = require("hardhat");
+require('dotenv').config();
 
-const contract_address = 0x6C485D7197e0018B5B11F6A0129b1a3f3409987d;
-// const { royaltyDistributor_address } = require("../hardhat.config.js");
+const contract_address = process.env.MAIN_CONTRACT_ADDR;
 
 async function main() {
-    const deployedAddress = "0x6C485D7197e0018B5B11F6A0129b1a3f3409987d";
     const YourContract = await ethers.getContractFactory("BlockBoard");
-    const contractInstance = YourContract.attach(deployedAddress);
+    const contractInstance = YourContract.attach(contract_address);
 
     const result = await contractInstance.getAd(1);
 	console.log(result);
