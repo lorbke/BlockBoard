@@ -23,8 +23,8 @@ let BillBoardController = exports.BillBoardController = class BillBoardControlle
     create(createBillBoardDto) {
         return this.billBoardService.create(createBillBoardDto);
     }
-    findAll() {
-        return this.billBoardService.findAll();
+    findAllBillBoard() {
+        return this.billBoardService.findAllBillBoard();
     }
     findOne(id) {
         return this.billBoardService.findOne(id);
@@ -45,7 +45,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], BillBoardController.prototype, "findAll", null);
+], BillBoardController.prototype, "findAllBillBoard", null);
 __decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),

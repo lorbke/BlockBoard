@@ -4,6 +4,7 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 export declare class CompanyController {
     private readonly companyService;
     constructor(companyService: CompanyService);
+    getRentedByCompany(): Promise<any[]>;
     create(createCompanyDto: CreateCompanyDto): Promise<{
         id: string;
         username: string;

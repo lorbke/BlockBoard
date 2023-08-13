@@ -13,10 +13,7 @@ export declare class BillBoardController {
         status: import(".prisma/client").$Enums.BillBoardStatus;
         renterId: string;
     }>;
-    findAll(): Promise<{
-        id: string;
-        walletAddress: string;
-    }[]>;
+    findAllBillBoard(): Promise<any[]>;
     findOne(id: string): Promise<{
         id: string;
         walletAddress: string;

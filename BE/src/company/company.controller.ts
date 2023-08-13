@@ -8,6 +8,11 @@ import { JwtAuthGuard } from 'src/auth/auth.guard';
 export class CompanyController {
   constructor(private readonly companyService: CompanyService) {}
 
+  @Get('getRentedByCompany')
+  getRentedByCompany() {
+    console.log('bsfddsf')
+    return this.companyService.getRentedByCompany();
+  }
   @Post()
   // @UseGuards(JwtAuthGuard)
   create(@Body() createCompanyDto: CreateCompanyDto) {
@@ -25,6 +30,7 @@ export class CompanyController {
   findOne(@Param('id') id: string) {
     return this.companyService.findOne(id);
   }
+  
 
   @Patch(':id')
   // @UseGuards(JwtAuthGuard)
