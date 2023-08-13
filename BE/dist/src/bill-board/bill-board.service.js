@@ -83,6 +83,7 @@ let BillBoardService = exports.BillBoardService = class BillBoardService {
             for (let i = 0; i < totalTokens; i++) {
                 const billboardInfo = await this.mainContract.billboards_map(i);
                 const billboardId = await this.mainContract.billboard_token_list(i);
+                console.log(billboardId);
                 const billboard = {
                     id: billboardId,
                     info: billboardInfo

@@ -81,8 +81,9 @@ export class BillBoardService {
         const billboardData = [];
 
         for (let i = 0; i < totalTokens; i++) {
-            const billboardInfo = await this.mainContract.billboards_map(i);
-            const billboardId = await this.mainContract.billboard_token_list(i);
+          const billboardInfo = await this.mainContract.billboards_map(i);
+          const billboardId = await this.mainContract.billboard_token_list(i);
+          console.log(billboardId)
             // const walletAddress = billboardInfo.walletAddress;
 
             const billboard = {
