@@ -162,11 +162,11 @@ void ShowGIF(const char *name) {
     Serial.printf("Successfully opened GIF; Canvas size = %d x %d\n",
                   gif.getCanvasWidth(), gif.getCanvasHeight());
     Serial.flush();
-    while (gif.playFrame(true, NULL)) {
-      //   if ( (millis() - start_tick) > 8000) { // we'll get bored after about
-      //   8 seconds of the same looping gif
-      //     break;
-      //   }
+    while ((millis() - start_tick) < 20000) {
+      while (gif.playFrame(true, NULL)) {
+        // dma_display->fillScreen(myBLACK);
+      }
+      gif.reset();
     }
     gif.close();
   }
@@ -185,7 +185,7 @@ void setup() {
   // Display Setup
   dma_display = new MatrixPanel_I2S_DMA(mxconfig);
   dma_display->begin();
-  dma_display->setBrightness8(10);  // 0-255
+  dma_display->setBrightness8(255);  // 0-255
   dma_display->clearScreen();
   dma_display->fillScreen(myWHITE);
 
